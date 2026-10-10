@@ -138,3 +138,14 @@ describe('offline progression', () => {
     expect(e.getSnapshot().modules.m15?.buildRemaining ?? 0).toBe(0);
   });
 });
+
+describe('save concurrency', () => {
+  it('overlapping saves to one slot are serialised and the last one wins', async () => {
+    const storage = new MemoryStorage();
+    const saves = new SaveManager(storage);
+    const results = await Promise.all([saves.save(1, newGame(1), 1), saves.save(1, run(newGame(1), 5), 2), saves.save(1, run(newGame(1), 9), 3)]);
+    expect(results.every((r) => r.ok)).toBe(true);
+    expect(await saves.load(1)).toMatchObject({ ok: true, savedAt: 3 });
+    expect(storage.files.has('slot1.tmp')).toBe(false);
+  });
+});

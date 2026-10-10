@@ -18,6 +18,8 @@ jest.mock('@shopify/react-native-skia', () => {
     Path: { Make: () => chain, MakeFromSVGString: () => ({}) },
     PathBuilder: { Make: () => chain },
     Paint: () => chain,
+    Shader: { MakeLinearGradient: () => ({}), MakeRadialGradient: () => ({}) },
+    MaskFilter: { MakeBlur: () => ({}) },
     PictureRecorder: () => ({ beginRecording: () => chain, finishRecordingAsPicture: () => ({}) }),
     Color: (c: unknown) => c,
     XYWHRect: () => ({}),

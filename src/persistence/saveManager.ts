@@ -77,12 +77,21 @@ function parseEnvelope(text: string | null): { ok: true; env: SaveEnvelope; stat
 }
 
 export class SaveManager {
+  /** Saves run one at a time so an autosave and a background save never share the tmp file. */
+  private queue: Promise<unknown> = Promise.resolve();
+
   constructor(
     private storage: SaveStorage,
     private appVersion = '1.0.0',
   ) {}
 
-  async save(slot: Slot, state: GameState, now = Date.now()): Promise<{ ok: true } | { ok: false; reason: 'invalid' | 'io' }> {
+  save(slot: Slot, state: GameState, now = Date.now()): Promise<{ ok: true } | { ok: false; reason: 'invalid' | 'io' }> {
+    const run = this.queue.then(() => this.saveNow(slot, state, now));
+    this.queue = run.catch(() => undefined);
+    return run;
+  }
+
+  private async saveNow(slot: Slot, state: GameState, now: number): Promise<{ ok: true } | { ok: false; reason: 'invalid' | 'io' }> {
     const env: SaveEnvelope = { format: SAVE_FORMAT, savedAt: now, appVersion: this.appVersion, summary: summarize(state), state };
     let text: string;
     try {

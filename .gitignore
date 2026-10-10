@@ -58,3 +58,6 @@ release/builds/
 
 # local tool settings
 .claude/
+
+# raw store captures (regenerate with release/tools/capture-screenshots.mjs)
+release/store-assets/raw/

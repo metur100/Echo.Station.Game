@@ -194,7 +194,8 @@ export default function Ship() {
   const total = scores.containment + scores.symbiosis + scores.resonance;
   const path: ShipPath = total >= 4 ? dominantPath(snapshot) : 'neutral';
 
-  const sheetOpen = panel === 'build' || !!selectedId;
+  const buildOpen = panel === 'build' || !!ghost;
+  const sheetOpen = buildOpen || !!selectedId;
   const sideW = landscape ? Math.min(400, width * 0.38) : 0;
   const shipInsets = landscape
     ? { top: insets.top + 70, bottom: insets.bottom + 90, left: insets.left + 300, right: sheetOpen ? sideW + 20 : 70 }
@@ -258,7 +259,7 @@ export default function Ship() {
             exiting={FadeOutDown.duration(160)}
             style={landscape ? [styles.side, { width: sideW, top: -(height - insets.bottom - 90) + insets.top + space.md, right: insets.right + space.md }] : { maxHeight: height * 0.44, marginBottom: space.sm }}
           >
-            {panel === 'build' ? (
+            {buildOpen ? (
               <BuildPanel state={snapshot} onClose={() => { setPanel('none'); useGame.getState().cancelBuild(); }} onPlaced={() => setPanel('none')} />
             ) : selectedId ? (
               <Inspector state={snapshot} moduleId={selectedId} onClose={() => select(null)} compact={!landscape} />

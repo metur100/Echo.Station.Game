@@ -24,7 +24,7 @@ import { runOnJS, useDerivedValue, useReducedMotion, useSharedValue, withTiming,
 
 import { clampCamera, clampScale, fitCamera, screenToWorld } from '../camera/camera';
 import { footprint } from '../content/modules';
-import { gridBounds, hitTest, rectBounds, worldToGrid, type HitBox } from '../coordinates/iso';
+import { gridBounds, hitTest, worldToGrid, type HitBox } from '../coordinates/iso';
 import type { GameState, ModuleType, Rotation } from '../engine/types';
 import { useSettings } from '../../state/settingsStore';
 import { colors } from '../../theme/tokens';
@@ -75,19 +75,23 @@ export const ShipView = forwardRef<ShipViewHandle, Props>(function ShipView(
     ghostMode.value = !!ghost;
   }, [ghost, ghostMode]);
 
-  // Frame the rooms that exist (plus a one-cell margin), not the whole empty hull.
+  // Frame the rooms that exist (their projected corners plus a margin), not the whole empty hull.
   const roomBounds = useMemo(() => {
     const mods = Object.values(state.modules);
     if (!mods.length) return bounds;
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
     for (const m of mods) {
       const f = footprint(m.type, m.rotation);
-      x0 = Math.min(x0, m.x);
-      y0 = Math.min(y0, m.y);
-      x1 = Math.max(x1, m.x + f.w);
-      y1 = Math.max(y1, m.y + f.h);
+      for (const [gx, gy] of [[m.x, m.y], [m.x + f.w, m.y], [m.x, m.y + f.h], [m.x + f.w, m.y + f.h]]) {
+        const w = P(gx, gy, 0);
+        left = Math.min(left, w.x);
+        right = Math.max(right, w.x);
+        bottom = Math.max(bottom, w.y + 14);
+        top = Math.min(top, w.y - WALL - 18);
+      }
     }
-    return rectBounds(Math.max(0, x0 - 0.6), Math.max(0, y0 - 0.6), Math.min(state.grid.width, x1 + 0.6), Math.min(state.grid.height, y1 + 0.6), WALL + 24);
+    const pad = 24;
+    return { left: left - pad, right: right + pad, top: top - pad, bottom: bottom + pad, width: right - left + pad * 2, height: bottom - top + pad * 2 };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.layoutVersion, bounds]);
 
