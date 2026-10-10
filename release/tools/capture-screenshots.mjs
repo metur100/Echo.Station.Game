@@ -50,13 +50,20 @@ async function capture(device) {
   await sleep(2500);
   demoStatusBar();
   // Warm up: the first deep link after a resize reloads the layout.
-  await open('dev-demo?scene=ship', 9000);
+  await open('dev-demo?scene=ship', 20000);
   const dir = path.join(ROOT, 'release', 'store-assets', 'raw', device.key);
   fs.mkdirSync(dir, { recursive: true });
   for (const [i, scene] of SCENES.entries()) {
     if (onlyScenes && !onlyScenes.includes(scene.id)) continue;
-    await open('menu', 2000);
-    await open(`dev-demo?scene=${scene.id}`, scene.wait ?? 15000);
+    if (process.env.COLD) {
+      // Cold start per scene: avoids Expo Go memory pressure on large tablet screens.
+      adb('shell', 'am', 'force-stop', 'host.exp.exponent');
+      await sleep(1500);
+      await open(`dev-demo?scene=${scene.id}`, 40000);
+    } else {
+      await open('menu', 2000);
+      await open(`dev-demo?scene=${scene.id}`, scene.wait ?? 25000);
+    }
     const file = path.join(dir, `${String(i + 1).padStart(2, '0')}-${scene.id}.png`);
     fs.writeFileSync(file, adbRaw('exec-out', 'screencap', '-p'));
     console.log('  ', path.relative(ROOT, file));

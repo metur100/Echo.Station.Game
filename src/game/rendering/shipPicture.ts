@@ -3,7 +3,7 @@
  * It is re-recorded only when the visual signature changes (layout, damage buckets,
  * quarantine, echoes), never per tick. Animated elements live in ShipOverlays.
  */
-import { Skia, type SkCanvas, type SkPicture } from '@shopify/react-native-skia';
+import { Skia, type SkCanvas, type SkImage, type SkPicture } from '@shopify/react-native-skia';
 
 import { footprint, MODULES } from '../content/modules';
 import { gridBounds } from '../coordinates/iso';
@@ -61,14 +61,38 @@ export function pictureSignature(s: GameState, path: ShipPath): string {
   return `${s.grid.width}x${s.grid.height}#${path}#${mods}#${echoes}`;
 }
 
-export function recordShipPicture({ state: s, path }: PictureInput): SkPicture {
+/** World-space rectangle the ship picture covers (hull, engine pods, mast). */
+export function pictureRect(s: Pick<GameState, 'grid'>) {
   const b = gridBounds(s.grid.width, s.grid.height, WALL + 30);
+  return { x: b.left - 80, y: b.top - 80, width: b.width + 160, height: b.height + 200 };
+}
+
+export function recordShipPicture({ state: s, path }: PictureInput): SkPicture {
+  const r = pictureRect(s);
   const rec = Skia.PictureRecorder();
-  const c = rec.beginRecording(Skia.XYWHRect(b.left - 80, b.top - 80, b.width + 160, b.height + 200));
+  const c = rec.beginRecording(Skia.XYWHRect(r.x, r.y, r.width, r.height));
   drawHull(c, s, path);
   const mods = Object.values(s.modules).sort((a, m) => depth(a) - depth(m) || (a.id < m.id ? -1 : 1));
   for (const m of mods) drawModule(c, s, m);
   return rec.finishRecordingAsPicture();
+}
+
+/**
+ * Rasterises the ship picture once into a bitmap at `k` pixels per world unit. Drawing one image
+ * per frame is far cheaper than replaying ~1500 anti-aliased paths, which matters because the
+ * animated overlays redraw the canvas every frame. Returns null if no surface is available.
+ */
+export function rasterizeShip(picture: SkPicture, rect: ReturnType<typeof pictureRect>, k: number): SkImage | null {
+  const w = Math.ceil(rect.width * k);
+  const h = Math.ceil(rect.height * k);
+  const surface = Skia.Surface.Make(w, h);
+  if (!surface) return null;
+  const c = surface.getCanvas();
+  c.scale(k, k);
+  c.translate(-rect.x, -rect.y);
+  c.drawPicture(picture);
+  surface.flush();
+  return surface.makeImageSnapshot();
 }
 
 const depth = (m: ModuleInstance) => {

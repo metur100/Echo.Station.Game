@@ -24,7 +24,6 @@ node release/tools/compose-store-assets.mjs        # captioned screenshots, icon
 | Google Play 7" tablet | `google-play/tablet-7` | 1200 × 1920 |
 | Google Play 10" tablet | `google-play/tablet-10` | 1600 × 2560 |
 | App Store iPhone 6.9" (required) | `app-store/iphone-6.9` | 1320 × 2868 |
-| App Store iPhone 6.5" | `app-store/iphone-6.5` | 1242 × 2688 |
 | App Store iPad 13" (required) | `app-store/ipad-13` | 2064 × 2752 |
 | Play icon | `google-play/icon-512.png` | 512 × 512 |
 | Play feature graphic | `google-play/feature-graphic-1024x500.png` | 1024 × 500 |

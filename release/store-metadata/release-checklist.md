@@ -31,7 +31,7 @@ Legend: [x] done and verified · [ ] to do · (owner) needs the account owner
 
 ## Store assets
 - [x] Icons (Play 512, App Store 1024), feature graphic 1024 × 500
-- [x] Screenshots for Play phone / 7" / 10" and App Store 6.9" / 6.5" / 13"
+- [x] Screenshots for Play phone / 7" / 10" and App Store 6.9" / 13"
 - [ ] Trailer / app preview (plan in `screenshot-plan.md`)
 
 ## Website and legal

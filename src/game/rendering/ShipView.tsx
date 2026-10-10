@@ -11,6 +11,7 @@ import {
   Circle,
   DashPathEffect,
   Group,
+  Image,
   Path,
   Picture,
   RadialGradient,
@@ -31,7 +32,7 @@ import { colors } from '../../theme/tokens';
 import { echoOnModule } from '../systems/echo';
 import { P } from './drawKit';
 import { anomalyGeo, CREW_COLOR, ghostGeo, moduleGeo, overlayColor, overlaySignature, statusColor, type OverlayMode } from './overlayGeometry';
-import { pictureSignature, recordShipPicture, WALL, type ShipPath } from './shipPicture';
+import { pictureRect, pictureSignature, rasterizeShip, recordShipPicture, WALL, type ShipPath } from './shipPicture';
 
 export interface ShipViewHandle {
   focusModule: (id: string) => void;
@@ -250,11 +251,20 @@ export const ShipView = forwardRef<ShipViewHandle, Props>(function ShipView(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [signature],
   );
+  const rect = useMemo(() => pictureRect(state), [state.grid.width, state.grid.height]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Cached bitmap of the static ship: 3 px per world unit (≈ 2400 × 1800, ~17 MB), crisp at normal zoom.
+  const raster = useMemo(() => {
+    try {
+      return rasterizeShip(picture, rect, Math.min(3, 4096 / Math.max(rect.width, rect.height)));
+    } catch {
+      return null;
+    }
+  }, [picture, rect]);
 
   const canvas = (
     <Canvas style={StyleSheet.absoluteFill} accessible={false}>
       <Group transform={transform}>
-        <Picture picture={picture} />
+        {raster ? <Image image={raster} x={rect.x} y={rect.y} width={rect.width} height={rect.height} fit="fill" /> : <Picture picture={picture} />}
         <Overlays state={state} signature={overlaySignature(state, overlay)} selectedId={selectedId} ghost={ghost} overlay={overlay} hintType={hintType} />
       </Group>
     </Canvas>

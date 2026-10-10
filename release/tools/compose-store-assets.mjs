@@ -8,7 +8,6 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { chromium } from 'playwright-core';
 
@@ -16,7 +15,8 @@ import { DEVICES, ROOT, SCENES } from './devices.mjs';
 
 const OUT = path.join(ROOT, 'release', 'store-assets');
 const RAW = path.join(OUT, 'raw');
-const font = (p) => pathToFileURL(path.join(ROOT, 'node_modules', p)).href;
+// Fonts are embedded as data URLs: pages set with setContent() cannot load file:// URLs.
+const font = (p) => `data:font/ttf;base64,${fs.readFileSync(path.join(ROOT, 'node_modules', p)).toString('base64')}`;
 const FONTS = `
   @font-face { font-family: Oxanium; font-weight: 700; src: url('${font('@expo-google-fonts/oxanium/700Bold/Oxanium_700Bold.ttf')}'); }
   @font-face { font-family: Inter; font-weight: 500; src: url('${font('@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf')}'); }
@@ -26,7 +26,6 @@ const FOLDER = {
   'android-tablet-7': 'google-play/tablet-7',
   'android-tablet-10': 'google-play/tablet-10',
   'ios-iphone-6.9': 'app-store/iphone-6.9',
-  'ios-iphone-6.5': 'app-store/iphone-6.5',
   'ios-ipad-13': 'app-store/ipad-13',
 };
 
