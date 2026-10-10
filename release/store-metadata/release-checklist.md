@@ -8,6 +8,7 @@ Legend: [x] done and verified · [ ] to do · (owner) needs the account owner
 - [x] `npm test` passes (unit, component and campaign playthrough tests)
 - [x] Production JS bundle exports (`npm run bundle:check`)
 - [x] Played on an Android emulator: new game, tutorial, build, repair, research, incident, expedition, save/continue, offline summary
+- [x] Release (preview) APK installed and run on the emulator
 - [ ] Played on a physical Android phone (release build)
 - [ ] Played on an iPhone / iPad (owner: needs a device or Simulator)
 
@@ -15,7 +16,7 @@ Legend: [x] done and verified · [ ] to do · (owner) needs the account owner
 - [x] Package `com.certidevelopment.echostation`, version 1.0.0, versionCode 1
 - [x] Upload keystore created, verified, excluded from git (see `release/android/README.md`)
 - [ ] (owner) Keystore and passwords backed up to a password manager
-- [ ] Production AAB built and verified — see `release/android/BUILDS.md`
+- [x] Production AAB built and verified — see `release/android/BUILDS.md`
 - [ ] (owner) Play Console app created, store listing and App content filled from `google-play.md`
 - [ ] (owner) Real support e-mail entered (replace the TODO placeholder)
 - [ ] (owner) Data safety: *no data collected*

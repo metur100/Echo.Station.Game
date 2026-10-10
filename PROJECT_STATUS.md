@@ -17,7 +17,7 @@ Last updated: 11 October 2026. Legend: ✅ done and verified · 🔄 in progress
 | Audio (synthesised SFX, ambient, music), haptics | ✅ | volumes and haptics in Settings |
 | Accessibility (labels, non-colour status, reduced motion, larger text) | ✅ | ❔ no screen-reader pass done |
 | Localisation-ready strings (English) | ✅ | string-completeness test |
-| Performance | ✅ / ❔ | dev build on emulator: 47–60 fps UI/JS after optimisation; release-build check on the preview APK pending |
+| Performance | ❔ | optimised (memoised HUD, signature-gated overlays, cached ship bitmap, no blur filters); the emulator is GPU-translation bound (stock Android Settings: 77 ms median), so real frame rates need a physical phone |
 | Physical device test | ❔ | not done (no device attached) |
 
 ## Release
@@ -27,7 +27,7 @@ Last updated: 11 October 2026. Legend: ✅ done and verified · 🔄 in progress
 | EAS project linked (`ce0762fb-…`) | ✅ | `@certi-development/echo-station-the-living-ship` |
 | Upload keystore | ✅ | `credentials/android/echo-station-upload.jks`, alias `echo-station`, gitignored |
 | Keystore backup | ⛔ | owner: copy keystore + `credentials.json` to a password manager |
-| Android production AAB | ✅ / 🔄 | see `release/android/BUILDS.md` |
+| Android production AAB | ✅ | EAS build 993f2dca, verified: package, version 1.0.0 (1), target SDK 36, upload-key signature, not debuggable, bundletool validate — `release/android/BUILDS.md` |
 | iOS build | ⛔ | needs the owner's Apple Developer login (`eas build -p ios`) |
 | Store texts, privacy answers, checklist | ✅ | `release/store-metadata/` |
 | Store screenshots, icons, feature graphic | ✅ | `release/store-assets/` |
@@ -43,12 +43,12 @@ Last updated: 11 October 2026. Legend: ✅ done and verified · 🔄 in progress
 | Live on GitHub Pages: https://metur100.github.io/Echo.Station.Website/ | ✅ (HTTP 200 verified) |
 | Privacy policy matches the app (no data collected) | ✅ |
 | Store buttons "Coming soon", trailer placeholder | ✅ |
-| Real screenshots in the gallery | 🔄 |
+| Real screenshots in the gallery | ✅ (8 captures, live) |
 
 ## Known limitations
 
 - iOS has not been built or run (no Apple account access in this environment); the UI is React Native and shared with Android.
 - The game has only been played on an Android emulator, not on physical phones.
-- First Skia render after a screen mounts is slow in development builds on the emulator (several seconds); the release build is being checked.
+- On the emulator the first Skia render after a screen mounts can take a few seconds and frame times are high; this matches the emulator's own baseline and needs confirming on a physical phone.
 - English only (strings are ready for more languages).
 - No trailer yet; store listings ship without video.
