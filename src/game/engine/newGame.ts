@@ -91,7 +91,7 @@ export function initializeNewGame(opts: NewGameOptions = {}): GameState {
     modules: {},
     layoutVersion: 1,
     nextId: 1,
-    resources: { ...zero, power: 50, oxygen: 95, food: 45, water: 60, research: 10, materials: 120, credits: 50 },
+    resources: { ...zero, power: 50, oxygen: 95, food: 45, water: 60, research: 10, materials: 150, credits: 50 },
     capacity: { ...zero },
     flows,
     hull: 72,

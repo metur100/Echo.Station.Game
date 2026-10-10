@@ -58,12 +58,13 @@ export function StatusStrip({ state, onIncident }: { state: GameState; onInciden
       expedition={ex ? `${ex.destinationId}:${Math.floor((ex.elapsed / ex.duration) * 100)}` : null}
       research={r ? `${r.id}:${Math.floor((r.progress / r.duration) * 100)}` : null}
       shed={Object.values(state.modules).filter((m) => m.offlineReason === 'no_power').length}
+      off={Object.values(state.modules).filter((m) => !m.enabled && m.type !== 'corridor').length}
       onIncident={onIncident}
     />
   );
 }
 
-const StatusView = memo(function StatusView({ incident, expedition, research, shed, onIncident }: { incident: string | null; expedition: string | null; research: string | null; shed: number; onIncident: () => void }) {
+const StatusView = memo(function StatusView({ incident, expedition, research, shed, off, onIncident }: { incident: string | null; expedition: string | null; research: string | null; shed: number; off: number; onIncident: () => void }) {
   const items: ReactNode[] = [];
   if (incident) {
     items.push(
@@ -80,6 +81,7 @@ const StatusView = memo(function StatusView({ incident, expedition, research, sh
     const [id, pct] = research.split(':');
     items.push(<Pill key="rs" text={t('hud.researching', { name: t(`research.${id}.name`), pct })} tone="anomaly" icon="research" />);
   }
+  if (off) items.push(<Pill key="off" text={t('hud.switchedOff', { n: off })} tone="muted" icon="power" />);
   if (shed) items.push(<Pill key="pw" text={t('hud.powerShortage', { n: shed })} tone="warn" icon="bolt" />);
   if (!items.length) return null;
   return <View style={styles.strip}>{items}</View>;

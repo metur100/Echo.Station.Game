@@ -259,7 +259,7 @@ export default function Ship() {
             style={landscape ? [styles.side, { width: sideW, top: -(height - insets.bottom - 90) + insets.top + space.md, right: insets.right + space.md }] : { maxHeight: height * 0.44, marginBottom: space.sm }}
           >
             {panel === 'build' ? (
-              <BuildPanel state={snapshot} onClose={() => { setPanel('none'); useGame.getState().cancelBuild(); }} />
+              <BuildPanel state={snapshot} onClose={() => { setPanel('none'); useGame.getState().cancelBuild(); }} onPlaced={() => setPanel('none')} />
             ) : selectedId ? (
               <Inspector state={snapshot} moduleId={selectedId} onClose={() => select(null)} compact={!landscape} />
             ) : null}
@@ -272,7 +272,7 @@ export default function Ship() {
 
       <Toasts top={insets.top + (landscape ? 70 : hudHeight + 8)} />
 
-      {!menuOpen && !gameOver ? <EventDialog state={snapshot} /> : null}
+      {!menuOpen && !gameOver && !away ? <EventDialog state={snapshot} /> : null}
       <PauseMenu visible={pauseVisible} onClose={closeMenu} onNavigate={() => setPauseVisible(false)} />
       {!pauseVisible ? <AwayDialog summary={away} onClose={dismissAway} /> : null}
     </View>

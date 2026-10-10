@@ -54,6 +54,8 @@ export function updateCondition(s: GameState, dtMin: number) {
     }
   }
 
+  // Workshops patch the hull a little; shield generators restore it properly.
+  for (const w of workshops) s.hull = tidy(clamp(s.hull + 0.15 * levelMultiplier(w.level) * w.efficiency * dtMin, 0, 100));
   for (const sh of mods.filter((m) => m.type === 'shield' && m.online)) {
     s.hull = tidy(clamp(s.hull + 0.6 * levelMultiplier(sh.level) * sh.efficiency * dtMin, 0, 100));
   }

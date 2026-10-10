@@ -142,7 +142,8 @@ export const EVENTS: EventDef[] = [
   {
     id: 'anomaly_discovery', severity: 'critical', cooldown: 10,
     trigger: (s) => {
-      const a = sorted(s.anomalies).find((x) => !s.discoveredAnomalies.includes(x.kind) && x.intensity >= 15 && (x.kind !== 'bloom' || s.flags.bloom_reveal));
+      // The starting Bloom is revealed by the tutorial; later anomalies once they are strong enough to detect.
+      const a = sorted(s.anomalies).find((x) => !s.discoveredAnomalies.includes(x.kind) && (x.kind === 'bloom' ? !!s.flags.bloom_reveal && x.intensity > 0 : x.intensity >= 15));
       return a ? { targetId: a.id } : null;
     },
     onTrigger: (s, ev) => {
@@ -251,7 +252,7 @@ export const EVENTS: EventDef[] = [
     defaultChoice: 'ground',
   },
   {
-    id: 'hull_damage', severity: 'warning', cooldown: 150, chance: 0.03, offline: false,
+    id: 'hull_damage', severity: 'warning', cooldown: 240, chance: 0.02, offline: false,
     trigger: (s) => {
       if (!s.flags.hazards_on) return null;
       const edge = mods(s).filter((m) => m.buildRemaining <= 0 && moduleCells(m).some((c) => isHullEdge(s, c.x, c.y)));
@@ -260,7 +261,7 @@ export const EVENTS: EventDef[] = [
     },
     onTrigger: (s, ev) => {
       const m = s.modules[ev.targetId!];
-      damageHull(s, 8);
+      damageHull(s, 6);
       if (m) {
         m.condition = tidy(clamp(m.condition - 20, 0, 100));
         addScar(s, m, 'impact');

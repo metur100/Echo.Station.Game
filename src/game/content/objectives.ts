@@ -34,6 +34,11 @@ export const OBJECTIVES: ObjectiveDef[] = [
     id: 'contain_bloom', chapter: 1,
     onStart: (s) => {
       s.flags.bloom_reveal = true;
+      // If the sealed bay went cold and the Bloom died before you got here, the ship still remembers it.
+      if (!s.anomalies.some((a) => a.kind === 'bloom') && !s.discoveredAnomalies.includes('bloom')) {
+        s.discoveredAnomalies.push('bloom');
+        s.log.push({ id: s.nextLogId++, time: Math.floor(s.time), severity: 'info', category: 'story', key: 'story.bloomGone' });
+      }
     },
     check: (s) =>
       s.discoveredAnomalies.includes('bloom') &&

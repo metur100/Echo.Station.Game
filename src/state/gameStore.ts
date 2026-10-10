@@ -226,9 +226,14 @@ export const useGame = create<GameStore>((set, get) => ({
     set({ build: initialGhost(snapshot, type), selectedId: null });
   },
 
-  moveGhost: (x, y) => {
+  moveGhost: (gx, gy) => {
     const b = get().build;
-    if (!b || (b.x === x && b.y === y)) return;
+    const s = get().snapshot;
+    if (!b || !s) return;
+    const f = footprint(b.type, b.rotation);
+    const x = Math.max(0, Math.min(s.grid.width - f.w, gx));
+    const y = Math.max(0, Math.min(s.grid.height - f.h, gy));
+    if (b.x === x && b.y === y) return;
     haptic('select');
     set({ build: { ...b, x, y } });
   },

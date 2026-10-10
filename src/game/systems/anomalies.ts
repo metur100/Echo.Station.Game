@@ -80,8 +80,8 @@ export function growthFactors(s: GameState, a: AnomalyInstance, topo: Topology):
     }
   } else {
     if (t < 8) {
-      rate = 3;
-      factors.push({ key: 'cold', value: 3 });
+      rate = 2;
+      factors.push({ key: 'cold', value: 2 });
     } else if (t > 18) {
       rate = -4;
       factors.push({ key: 'warm_frost', value: -4 });
@@ -189,7 +189,7 @@ export function updateAnomalies(s: GameState, topo: Topology, dtMin: number) {
     a.peak = Math.max(a.peak, a.intensity);
 
     // Effects
-    if (a.kind === 'frost' && !a.exploited) m.condition = tidy(clamp(m.condition - a.intensity * 0.01 * dtMin, 0, 100));
+    if (a.kind === 'frost' && !a.exploited) m.condition = tidy(clamp(m.condition - a.intensity * 0.006 * dtMin, 0, 100));
     if (a.kind === 'bloom' && a.exploited && m.type !== 'hydroponics' && m.quarantined) {
       s.resources.research = tidy(Math.min(s.capacity.research, s.resources.research + (a.intensity / 40) * dtMin));
     }

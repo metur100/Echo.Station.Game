@@ -34,7 +34,7 @@ export default function Research() {
   const sel = selected ? RESEARCH_BY_ID[selected] : null;
 
   return (
-    <Screen title={t('research.title')} label={t('research.points', { n: formatNumber(Math.floor(s.resources.research)) })}>
+    <Screen title={t('research.title')} label={t('research.points', { n: formatNumber(Math.floor(s.resources.research)) })} footer={sel ? <Detail s={s} def={sel} color={BRANCH_COLOR[branch]} /> : undefined}>
       {active ? (
         <Panel tone="anomaly">
           <Row style={{ justifyContent: 'space-between' }}>
@@ -79,7 +79,7 @@ export default function Research() {
         ))}
       </View>
 
-      {sel ? <Detail s={s} def={sel} color={BRANCH_COLOR[branch]} /> : <Text variant="small" color={colors.textFaint}>{t('research.pick')}</Text>}
+      {!sel ? <Text variant="small" color={colors.textFaint}>{t('research.pick')}</Text> : null}
     </Screen>
   );
 }

@@ -11,7 +11,7 @@ import { MODULE_ICON, type IconName } from '../icons';
 import { Button, IconButton, Label, Pill, Row, Text } from '../ui';
 
 /** Construction menu (catalogue) or, while placing, the placement controls. */
-export function BuildPanel({ state, onClose }: { state: GameState; onClose: () => void }) {
+export function BuildPanel({ state, onClose, onPlaced }: { state: GameState; onClose: () => void; onPlaced?: () => void }) {
   const ghost = useGame((s) => s.build);
   const startBuild = useGame((s) => s.startBuild);
   const rotate = useGame((s) => s.rotateGhost);
@@ -37,7 +37,7 @@ export function BuildPanel({ state, onClose }: { state: GameState; onClose: () =
         <Row gap={space.sm} style={{ marginTop: space.md }}>
           <Button label={t('build.cancel')} icon="close" variant="ghost" onPress={cancel} style={{ flex: 1 }} />
           {rotatable ? <Button label={t('build.rotate')} icon="rotate" onPress={rotate} style={{ flex: 1 }} /> : null}
-          <Button label={t('build.place')} icon="check" variant="primary" onPress={confirm} disabled={!check.valid} style={{ flex: 1.4 }} />
+          <Button label={t('build.place')} icon="check" variant="primary" onPress={() => { if (confirm()) onPlaced?.(); }} disabled={!check.valid} style={{ flex: 1.4 }} />
         </Row>
       </View>
     );
@@ -84,7 +84,7 @@ function BuildCard({ state, type, onPress }: { state: GameState; type: ModuleTyp
         </View>
         <Text variant="caption" color={colors.textFaint}>{t('build.size', { w, h })}</Text>
       </Row>
-      <Text variant="smallStrong" numberOfLines={1}>{t(`module.${type}.name`)}</Text>
+      <Text variant="smallStrong" numberOfLines={2} style={{ minHeight: 36 }}>{t(`module.${type}.name`)}</Text>
       {locked ? (
         <Row gap={4}>
           <Icon name="lock" size={12} color={colors.textFaint} />

@@ -66,7 +66,9 @@ export function updateTemperature(s: GameState, topo: Topology, dtMin: number) {
   for (const id of ids) {
     const m = s.modules[id];
     const t = before.get(id)!;
-    let dT = heatSources(s, m, load) - (extraCooling.get(id) ?? 0) - THERMAL.passiveLoss * (t - THERMAL.ambient);
+    // Radiators dump heat into space: they work harder on hot rooms and cannot cool below ambient.
+    const coolingFactor = clamp((t - THERMAL.ambient) / 40, 0, 1.5);
+    let dT = heatSources(s, m, load) - (extraCooling.get(id) ?? 0) * coolingFactor - THERMAL.passiveLoss * (t - THERMAL.ambient);
     for (const n of topo.neighbours.get(id) ?? []) dT += THERMAL.conduction * (before.get(n)! - t);
     m.temperature = tidy(clamp(t + dT * dtMin, -60, 250));
   }
