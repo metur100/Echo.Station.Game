@@ -78,6 +78,11 @@ export function conditionEfficiency(condition: number): number {
   return condition >= 60 ? 1 : 0.4 + 0.6 * (condition / 60);
 }
 
+/** A module hot enough (or breached) that emergency response makes sense. */
+export function needsEmergency(m: ModuleInstance, maxTemp: number): boolean {
+  return m.breached || m.overheated || m.temperature > maxTemp - 10;
+}
+
 export function cloneState<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
 }

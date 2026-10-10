@@ -86,6 +86,15 @@ export function hitTest(world: Point, boxes: HitBox[]): string | null {
   return null;
 }
 
+/** World-space bounds of a grid rectangle [x0,x1]×[y0,y1] (including room height). */
+export function rectBounds(x0: number, y0: number, x1: number, y1: number, roomHeight = ROOM_HEIGHT) {
+  const left = gridToWorld(x0, y1).x;
+  const right = gridToWorld(x1, y0).x;
+  const top = gridToWorld(x0, y0).y - roomHeight - 20;
+  const bottom = gridToWorld(x1, y1).y;
+  return { left, right, top, bottom, width: right - left, height: bottom - top };
+}
+
 /** World-space bounds of a grid (including room height). */
 export function gridBounds(width: number, height: number, roomHeight = ROOM_HEIGHT) {
   const left = gridToWorld(0, height).x;

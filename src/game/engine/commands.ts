@@ -9,7 +9,7 @@ import { DISMANTLE_REFUND, MODULES, UPGRADE_RESEARCH, upgradeCost } from '../con
 import { OBJECTIVES } from '../content/objectives';
 import { RESEARCH_BY_ID } from '../content/research';
 import { checkPlacement, moduleCells, wouldDisconnect } from './grid';
-import { addResource, cloneState, crewById, log, spend } from './helpers';
+import { addResource, cloneState, crewById, log, needsEmergency, spend } from './helpers';
 import { createModule } from './newGame';
 import type { Command, CommandResult, GameState } from './types';
 import { createEcho } from '../systems/echo';
@@ -132,7 +132,7 @@ function apply(s: GameState, cmd: Command): Err | null {
         case 'emergency': {
           const anomaly = s.anomalies.find((a) => a.id === t);
           const m = t ? s.modules[t] : undefined;
-          if (!anomaly && !(m && (m.breached || m.overheated || m.temperature > 60))) return err('error.noEmergency');
+          if (!anomaly && !(m && needsEmergency(m, MODULES[m.type].maxTemp))) return err('error.noEmergency');
           break;
         }
         case 'expedition_prep': {
@@ -202,6 +202,11 @@ function apply(s: GameState, cmd: Command): Err | null {
     case 'AcknowledgeObjective': {
       if (!OBJECTIVES.some((o) => o.id === cmd.objectiveId)) return err('error.unknownObjective');
       if (!s.objectives.acknowledged.includes(cmd.objectiveId)) s.objectives.acknowledged.push(cmd.objectiveId);
+      return null;
+    }
+    case 'AcknowledgeEnding': {
+      if (!s.ending) return err('error.noEnding');
+      s.flags.ending_seen = true;
       return null;
     }
     case 'EmergencyRecovery': {

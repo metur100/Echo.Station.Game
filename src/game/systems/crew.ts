@@ -8,6 +8,7 @@
  */
 import { MEMORY_LIMIT } from '../engine/constants';
 import { TRAITS, type TraitDef } from '../content/crew';
+import { MODULES } from '../content/modules';
 import { DESTINATION_BY_ID } from '../content/destinations';
 import { RESEARCH_EFFECTS } from '../content/research';
 import { captainBonus, clamp, hasResearch, log, tidy } from '../engine/helpers';
@@ -176,8 +177,9 @@ export function updateCrew(s: GameState, dtMin: number) {
         } else {
           const m = s.modules[c.targetId!];
           if (m.breached) m.condition = tidy(clamp(m.condition + 6 * rate * dtMin, 0, 100));
-          if (m.overheated || m.temperature > 60) m.temperature = tidy(m.temperature - 6 * rate * dtMin);
-          if (!m.breached && !m.overheated) finishTask(s, c, 'log.emergencyModuleDone', { module: m.type });
+          const hot = m.overheated || m.temperature > MODULES[m.type].maxTemp - 10;
+          if (hot) m.temperature = tidy(m.temperature - 6 * rate * dtMin);
+          if (!m.breached && !hot) finishTask(s, c, 'log.emergencyModuleDone', { module: m.type });
         }
         break;
       }

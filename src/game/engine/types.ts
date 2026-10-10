@@ -292,6 +292,7 @@ export type Command =
   | { type: 'ExploitAnomaly'; anomalyId: string }
   | { type: 'ResolveEvent'; choiceId: string }
   | { type: 'AcknowledgeObjective'; objectiveId: string }
+  | { type: 'AcknowledgeEnding' }
   | { type: 'EmergencyRecovery' };
 
 export type CommandType = Command['type'];
