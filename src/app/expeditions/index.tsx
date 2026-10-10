@@ -16,7 +16,7 @@ import { formatDuration, t } from '../../i18n';
 import { useGame } from '../../state/gameStore';
 import { accentColor, colors, radius, space } from '../../theme/tokens';
 
-const HOME = { x: 0.1, y: 0.86 };
+const HOME = { x: 0.1, y: 0.8 };
 
 export default function ExpeditionMap() {
   const s = useGame((x) => x.snapshot);
@@ -59,8 +59,8 @@ export default function ExpeditionMap() {
           </Circle>
           <Path path={`M ${at(HOME).x} ${at(HOME).y - 7} L ${at(HOME).x + 9} ${at(HOME).y} L ${at(HOME).x} ${at(HOME).y + 7} L ${at(HOME).x - 9} ${at(HOME).y} Z`} color={colors.cyan} />
         </Canvas>
-        <View style={[styles.homeLabel, { left: at(HOME).x - 40, top: at(HOME).y + 12 }]}>
-          <Text variant="caption" color={colors.cyan} center>{t('hud.shipName')}</Text>
+        <View style={[styles.homeLabel, { left: at(HOME).x + 16, top: at(HOME).y + 6 }]}>
+          <Text variant="caption" color={colors.cyan}>{t('hud.shipName')}</Text>
         </View>
         {DESTINATIONS.map((d) => {
           const p = at(d.map);
@@ -131,6 +131,6 @@ const styles = StyleSheet.create({
   map: { alignSelf: 'center', borderRadius: radius.lg, borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(7,12,26,0.85)', overflow: 'hidden' },
   node: { position: 'absolute', width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   nodeLabel: { position: 'absolute', width: 110 },
-  homeLabel: { position: 'absolute', width: 80 },
+  homeLabel: { position: 'absolute', width: 140 },
   card: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.md, borderRadius: radius.md, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.panel, minHeight: 64 },
 });

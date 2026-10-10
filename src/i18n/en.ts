@@ -421,6 +421,7 @@ export const en: Record<string, string> = {
   'echo.active': 'Active echoes',
   'echo.archived': 'Faded echoes',
   'echo.empty': 'The ship has not recorded anything yet. Overloads, breaches, dead anomalies and major decisions will leave echoes here.',
+  'echo.noneActive': 'No echo is active right now. The faded ones below are what the ship still remembers.',
   'echo.intensity': 'Intensity {n}',
   'echo.harnessed': 'Harnessed',
   'echo.location': 'Location',

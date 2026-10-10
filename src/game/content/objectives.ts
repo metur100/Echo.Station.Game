@@ -41,7 +41,8 @@ export const OBJECTIVES: ObjectiveDef[] = [
       }
     },
     check: (s) =>
-      s.discoveredAnomalies.includes('bloom') &&
+      // Discovered — or already gone (it can die in the cold bay before the tutorial gets here).
+      (s.discoveredAnomalies.includes('bloom') || !s.anomalies.some((a) => a.kind === 'bloom')) &&
       s.events.active?.defId !== 'anomaly_discovery' &&
       s.anomalies.filter((a) => a.kind === 'bloom').every((a) => a.exploited || a.intensity < 20 || s.modules[a.moduleId]?.quarantined),
     hint: { screen: null, module: 'storage' }, reward: { xp: 40 },

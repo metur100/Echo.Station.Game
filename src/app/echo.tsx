@@ -50,7 +50,7 @@ export default function EchoArchive() {
           ))}
         </View>
       </Panel>
-      {active.length === 0 ? <Text color={colors.textDim}>{t('echo.empty')}</Text> : null}
+      {active.length === 0 ? <Text color={colors.textDim}>{archived.length ? t('echo.noneActive') : t('echo.empty')}</Text> : null}
       {active.map((e) => (
         <EchoCard key={e.id} s={s} e={e} expanded={open === e.id} onPress={() => setOpen(open === e.id ? null : e.id)} />
       ))}
