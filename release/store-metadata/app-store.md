@@ -64,6 +64,7 @@ From `release/store-assets/app-store/`:
 | Display | Folder | Size |
 |---|---|---|
 | iPhone 6.9" (required; App Store Connect scales it for smaller iPhones) | `iphone-6.9/` | 1320 × 2868 |
+| iPhone 6.3" | `iphone-6.3/` | 1206 × 2622 |
 | iPad 13" (required, the app supports iPad) | `ipad-13/` | 2064 × 2752 |
 
 ## App Privacy

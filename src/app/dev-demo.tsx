@@ -34,7 +34,7 @@ export default function DevDemo() {
       build: null,
     });
     if (scene === 'build') useGame.getState().startBuild('hydroponics');
-    const target = scene === 'research' ? '/research' : scene === 'crew' ? '/crew/ines' : scene === 'map' ? '/expeditions' : scene === 'echo' ? '/echo' : '/ship';
+    const target = scene === 'hero' ? '/dev-hero' : scene === 'research' ? '/research' : scene === 'crew' ? '/crew/ines' : scene === 'map' ? '/expeditions' : scene === 'echo' ? '/echo' : '/ship';
     router.replace(target as '/ship');
     // Raise the incident once the ship has rendered (a modal open at mount hides the canvas below it).
     if (scene === 'incident') {

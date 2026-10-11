@@ -31,8 +31,8 @@ Legend: [x] done and verified · [ ] to do · (owner) needs the account owner
 - [ ] (owner) App Privacy: *Data Not Collected*; age rating questionnaire
 
 ## Store assets
-- [x] Icons (Play 512, App Store 1024), feature graphic 1024 × 500
-- [x] Screenshots for Play phone / 7" / 10" and App Store 6.9" / 13"
+- [x] Icons (Play 512, App Store 1024), feature graphic 1024 × 500, Play headers 5244 × 2950 and 3840 × 1646
+- [x] Screenshots for Play phone / 7" / 10" and App Store 6.9" / 6.3" / 13"
 - [ ] Trailer / app preview (plan in `screenshot-plan.md`)
 
 ## Website and legal

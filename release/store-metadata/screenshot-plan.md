@@ -13,7 +13,8 @@ Note for iOS: the captures come from Android (React Native renders the same UI);
 ```bash
 npx expo start --go --port 8082                    # Metro
 node release/tools/capture-screenshots.mjs         # raw captures for every size → release/store-assets/raw/<device>/
-node release/tools/compose-store-assets.mjs        # captioned screenshots, icon, feature graphic → release/store-assets/<store>/
+node release/tools/capture-headers.mjs             # full-resolution ship renders for the Play headers (dev-only /dev-hero route)
+node release/tools/compose-store-assets.mjs        # captioned screenshots, icons, feature graphic, headers → release/store-assets/<store>/
 ```
 
 ## Sizes
@@ -24,9 +25,12 @@ node release/tools/compose-store-assets.mjs        # captioned screenshots, icon
 | Google Play 7" tablet | `google-play/tablet-7` | 1200 × 1920 |
 | Google Play 10" tablet | `google-play/tablet-10` | 1600 × 2560 |
 | App Store iPhone 6.9" (required) | `app-store/iphone-6.9` | 1320 × 2868 |
+| App Store iPhone 6.3" | `app-store/iphone-6.3` | 1206 × 2622 |
 | App Store iPad 13" (required) | `app-store/ipad-13` | 2064 × 2752 |
 | Play icon | `google-play/icon-512.png` | 512 × 512 |
 | Play feature graphic | `google-play/feature-graphic-1024x500.png` | 1024 × 500 |
+| Play header (Kopfzeile) | `google-play/header-5244x2950.png` | 5244 × 2950 |
+| Play header (Kopfzeile), wide | `google-play/header-3840x1646.png` | 3840 × 1646 |
 | App Store icon | `app-store/icon-1024.png` | 1024 × 1024 (no alpha) |
 
 ## Order and captions

@@ -26,6 +26,7 @@ const FOLDER = {
   'android-tablet-7': 'google-play/tablet-7',
   'android-tablet-10': 'google-play/tablet-10',
   'ios-iphone-6.9': 'app-store/iphone-6.9',
+  'ios-iphone-6.3': 'app-store/iphone-6.3',
   'ios-ipad-13': 'app-store/ipad-13',
 };
 
@@ -117,11 +118,46 @@ async function graphics(browser) {
   console.log('wrote google-play/feature-graphic-1024x500.png');
 }
 
+/**
+ * Google Play header images ("Kopfzeile"): the full-resolution ship capture with the title on the
+ * left. Text stays inside the central 80 % so it survives cropping on smaller layouts.
+ */
+async function headers(browser) {
+  const logo = fs.readFileSync(path.join(ROOT, 'assets', 'images', 'splash-icon.png')).toString('base64');
+  for (const [w, h] of [[5244, 2950], [3840, 1646]]) {
+    const shot = path.join(RAW, 'header', `${w}x${h}.png`);
+    if (!fs.existsSync(shot)) {
+      console.log('skip header (no capture):', w, h);
+      continue;
+    }
+    const p = await browser.newPage({ deviceScaleFactor: 1 });
+    await p.setViewportSize({ width: w, height: h });
+    const u = h / 100; // 1 % of the height
+    const css = `
+      .bg { position: absolute; inset: 0; width: 100%; height: 100%; -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 5%, #000 9%, #000 91%, transparent 95%, transparent 100%); }
+      .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4,7,15,.92) 0%, rgba(4,7,15,.75) 32%, rgba(4,7,15,0) 58%); }
+      .text { position: absolute; left: ${w * 0.1}px; top: 50%; transform: translateY(-50%); width: ${w * 0.36}px; }
+      .logo { width: ${u * 12}px; height: ${u * 12}px; margin-bottom: ${u * 2.5}px; }
+      .label { font: 700 ${u * 2.6}px Oxanium; letter-spacing: .32em; color: #45E0DC; }
+      h1 { font: 700 ${u * 13}px/0.95 Oxanium; letter-spacing: .02em; margin-top: ${u * 1.6}px; }
+      p { font: 500 ${u * 3.6}px/1.35 Inter; color: #93A1BF; margin-top: ${u * 3}px; }`;
+    const body = `<img class="bg" src="data:image/png;base64,${fs.readFileSync(shot).toString('base64')}"/><div class="shade"></div>
+      <div class="text"><img class="logo" src="data:image/png;base64,${logo}"/><div class="label">THE LIVING SHIP</div><h1>ECHO<br/>STATION</h1><p>Keep a damaged research ship alive. The ship remembers everything.</p></div>`;
+    await p.setContent(PAGE(w, h, body, css));
+    await p.evaluate(() => document.fonts.ready);
+    const out = path.join(OUT, 'google-play', `header-${w}x${h}.png`);
+    await p.screenshot({ path: out });
+    await p.close();
+    console.log('wrote', path.relative(OUT, out));
+  }
+}
+
 const channel = process.env.BROWSER_CHANNEL ?? (process.platform === 'win32' ? 'msedge' : 'chrome');
 const browser = await chromium.launch({ channel });
 try {
   await screenshots(browser);
   await graphics(browser);
+  await headers(browser);
 } finally {
   await browser.close();
 }

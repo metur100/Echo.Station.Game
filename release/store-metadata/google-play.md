@@ -50,6 +50,7 @@ A game by Medin Turkes.
 
 **App icon:** `release/store-assets/google-play/icon-512.png`
 **Feature graphic:** `release/store-assets/google-play/feature-graphic-1024x500.png`
+**Header image (Kopfzeile):** `release/store-assets/google-play/header-5244x2950.png` and `header-3840x1646.png` (the ship rendered at full resolution, title on the left inside the central 80 %)
 **Phone screenshots:** `release/store-assets/google-play/phone/*.png` (1080 × 1920)
 **7-inch tablet:** `release/store-assets/google-play/tablet-7/*.png` (1200 × 1920)
 **10-inch tablet:** `release/store-assets/google-play/tablet-10/*.png` (1600 × 2560)

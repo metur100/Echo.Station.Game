@@ -48,6 +48,8 @@ interface Props {
   overlay?: OverlayMode;
   hintType?: ModuleType | null;
   interactive?: boolean;
+  /** Draw the ship as vectors instead of the cached bitmap (sharp at very high resolutions, e.g. store headers). */
+  vector?: boolean;
   insets?: { top: number; bottom: number; left: number; right: number };
   onSelect?: (id: string | null) => void;
   onLongPress?: (id: string) => void;
@@ -55,7 +57,7 @@ interface Props {
 }
 
 export const ShipView = forwardRef<ShipViewHandle, Props>(function ShipView(
-  { state, path, selectedId = null, ghost = null, overlay = 'none', hintType = null, interactive = true, insets = { top: 0, bottom: 0, left: 0, right: 0 }, onSelect, onLongPress, onGhostMove },
+  { state, path, selectedId = null, ghost = null, overlay = 'none', hintType = null, interactive = true, vector = false, insets = { top: 0, bottom: 0, left: 0, right: 0 }, onSelect, onLongPress, onGhostMove },
   ref,
 ) {
   const [size, setSize] = useState({ w: 0, h: 0 });
@@ -254,12 +256,13 @@ export const ShipView = forwardRef<ShipViewHandle, Props>(function ShipView(
   const rect = useMemo(() => pictureRect(state), [state.grid.width, state.grid.height]); // eslint-disable-line react-hooks/exhaustive-deps
   // Cached bitmap of the static ship: 3 px per world unit (≈ 2400 × 1800, ~17 MB), crisp at normal zoom.
   const raster = useMemo(() => {
+    if (vector) return null;
     try {
       return rasterizeShip(picture, rect, Math.min(3, 4096 / Math.max(rect.width, rect.height)));
     } catch {
       return null;
     }
-  }, [picture, rect]);
+  }, [picture, rect, vector]);
 
   const canvas = (
     <Canvas style={StyleSheet.absoluteFill} accessible={false}>
